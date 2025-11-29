@@ -1,4 +1,5 @@
 ﻿using Mini.CoWorkify.Application.DTOs;
+using Mini.CoWorkify.Domain.Entities;
 using Mini.CoWorkify.Domain.Interfaces;
 
 namespace Mini.CoWorkify.Application.Services;
@@ -12,8 +13,12 @@ public class ReservationService : IReservationService
         _repository = repository;
     }
 
-    public Task<Guid> CreateReservationAsync(CreateReservationDto createReservationDto)
+    public async Task<Guid> CreateReservationAsync(CreateReservationDto dto)
     {
-        throw new NotImplementedException();
+        var reservation = new Reservation(dto.UserId, dto.Date);
+        
+        await _repository.AddAsync(reservation);
+
+        return reservation.Id;
     }
 }
