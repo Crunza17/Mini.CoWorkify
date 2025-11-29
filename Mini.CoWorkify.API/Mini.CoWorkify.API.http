@@ -1,0 +1,6 @@
+@Mini.CoWorkify.API_HostAddress = http://localhost:5174
+
+GET {{Mini.CoWorkify.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
