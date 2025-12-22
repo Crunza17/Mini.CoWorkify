@@ -5,7 +5,7 @@ using Mini.CoWorkify.Domain.Interfaces;
 using Moq;
 using Shouldly;
 
-namespace Mini.CoWorkify.UnitTests;
+namespace Mini.CoWorkify.UnitTests.Reservations;
 
 public class ReservationServiceShould
 {

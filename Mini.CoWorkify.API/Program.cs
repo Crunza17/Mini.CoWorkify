@@ -37,3 +37,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+namespace Mini.CoWorkify.API
+{
+    public partial class Program { }
+}

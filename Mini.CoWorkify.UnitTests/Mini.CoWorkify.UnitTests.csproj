@@ -25,4 +25,8 @@
       <ProjectReference Include="..\Mini.CoWorkify.Domain\Mini.CoWorkify.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Reservations\" />
+    </ItemGroup>
+
 </Project>

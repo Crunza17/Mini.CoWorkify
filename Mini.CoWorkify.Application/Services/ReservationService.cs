@@ -18,7 +18,7 @@ public class ReservationService : IReservationService
         var isOccupied = await _repository.IsDateOccupiedAsync(dto.Date);
         
         if (isOccupied)
-            throw new InvalidOperationException("The date is already occupied.");
+            throw new InvalidOperationException("The date is already occupied");
         
         var reservation = new Reservation(dto.UserId, dto.Date);
         await _repository.AddAsync(reservation);

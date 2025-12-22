@@ -1,7 +1,7 @@
 ﻿using Mini.CoWorkify.Domain.Entities;
 using Shouldly;
 
-namespace Mini.CoWorkify.UnitTests;
+namespace Mini.CoWorkify.UnitTests.Reservations;
 
 public class ReservationShould
 {
