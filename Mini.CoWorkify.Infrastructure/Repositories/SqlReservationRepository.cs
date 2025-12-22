@@ -1,4 +1,5 @@
-﻿using Mini.CoWorkify.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Mini.CoWorkify.Domain.Entities;
 using Mini.CoWorkify.Domain.Interfaces;
 using Mini.CoWorkify.Infrastructure.Data;
 
@@ -16,5 +17,10 @@ public class SqlReservationRepository(CoWorkifyDbContext context) : IReservation
     public async Task<Reservation?> GetByIdAsync(Guid reservationId)
     {
         return await context.Reservations.FindAsync(reservationId);
+    }
+
+    public async Task<bool> IsDateOccupiedAsync(DateTime date)
+    {
+        return await context.Reservations.AnyAsync(r => r.Date == date);
     }
 }

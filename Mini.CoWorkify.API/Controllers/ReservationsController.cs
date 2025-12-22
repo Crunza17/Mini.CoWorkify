@@ -28,6 +28,10 @@ public class ReservationsController(IReservationService service, IValidator<Crea
         {
             return BadRequest(new { Error = ex.Message });
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { Error = ex.Message });
+        }
     }
     
     [HttpGet("{id}")]

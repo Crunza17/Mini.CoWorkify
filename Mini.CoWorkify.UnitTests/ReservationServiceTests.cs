@@ -19,7 +19,7 @@ public class ReservationServiceShould
     }
 
     [Fact]
-    public async Task Call_Repository_And_Return_Id_When_Dto_Is_Valid()
+    public async Task ReturnId_When_DtoIsValid()
     {
         var dto = new CreateReservationDto(Guid.NewGuid(), DateTime.UtcNow.AddDays(1));
 
@@ -30,7 +30,7 @@ public class ReservationServiceShould
     }
 
     [Fact]
-    public async Task GetById_Should_Return_Reservation_When_It_Exists()
+    public async Task ReturnReservation_When_IdExists()
     {
         var id  = Guid.NewGuid();
         var reservation = new Reservation(id, DateTime.UtcNow.AddDays(1));
@@ -41,5 +41,19 @@ public class ReservationServiceShould
         
         result.ShouldNotBeNull();
         result.Id.ShouldBe(reservation.Id);
+    }
+    
+    [Fact]
+    public async Task ThrowException_When_DateIsOccupied()
+    {
+        var dto = new CreateReservationDto(Guid.NewGuid(), DateTime.UtcNow.AddDays(1));
+        
+        _mockRepo.Setup(r => r.IsDateOccupiedAsync(dto.Date)).ReturnsAsync(true);
+
+        await Should.ThrowAsync<InvalidOperationException>(async () => 
+            await _service.CreateReservationAsync(dto)
+        );
+    
+        _mockRepo.Verify(r => r.AddAsync(It.IsAny<Reservation>()), Times.Never);
     }
 }

@@ -15,8 +15,12 @@ public class ReservationService : IReservationService
 
     public async Task<Guid> CreateReservationAsync(CreateReservationDto dto)
     {
-        var reservation = new Reservation(dto.UserId, dto.Date);
+        var isOccupied = await _repository.IsDateOccupiedAsync(dto.Date);
         
+        if (isOccupied)
+            throw new InvalidOperationException("The date is already occupied.");
+        
+        var reservation = new Reservation(dto.UserId, dto.Date);
         await _repository.AddAsync(reservation);
 
         return reservation.Id;

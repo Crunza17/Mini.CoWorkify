@@ -6,4 +6,5 @@ public interface IReservationRepository
 {
     Task AddAsync(Reservation reservation);
     Task<Reservation?> GetByIdAsync(Guid reservationId);
+    Task<bool> IsDateOccupiedAsync(DateTime date);
 }
