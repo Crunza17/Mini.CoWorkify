@@ -12,4 +12,9 @@ public class InMemoryReservationRepository : IReservationRepository
 
         return Task.CompletedTask;
     }
+
+    public Task<Reservation> GetByIdAsync(Guid reservationId)
+    {
+        throw new NotImplementedException();
+    }
 }
