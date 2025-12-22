@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Mini.CoWorkify.Application.Services;
 using Mini.CoWorkify.Domain.Interfaces;
@@ -10,6 +11,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddValidatorsFromAssemblyContaining<Mini.CoWorkify.Application.Validators.CreateReservationDtoValidator>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 

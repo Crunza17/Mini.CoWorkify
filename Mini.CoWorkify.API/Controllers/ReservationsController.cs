@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Mini.CoWorkify.Application.DTOs;
 using Mini.CoWorkify.Application.Services;
 
@@ -6,22 +7,21 @@ namespace Mini.CoWorkify.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ReservationsController : ControllerBase
+public class ReservationsController(IReservationService service, IValidator<CreateReservationDto> validator)
+    : ControllerBase
 {
-    private readonly IReservationService _service;
-    
-    public ReservationsController(IReservationService service)
-    {
-        _service = service;
-    }
-    
+
     [HttpPost]
     public async Task<IActionResult> Create(CreateReservationDto dto)
     {
+        var validationResult = await validator.ValidateAsync(dto);
+
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.ToDictionary());
+        
         try 
         {
-            var id = await _service.CreateReservationAsync(dto);
-            
+            var id = await service.CreateReservationAsync(dto);
             return Ok(new { Id = id });
         }
         catch (ArgumentException ex)
@@ -35,7 +35,7 @@ public class ReservationsController : ControllerBase
     {
         try 
         {
-            var reservation = await _service.GetReservationByIdAsync(id);
+            var reservation = await service.GetReservationByIdAsync(id);
             
             if (reservation is null)
                 return NotFound();
