@@ -21,4 +21,9 @@ public class ReservationService : IReservationService
 
         return reservation.Id;
     }
+
+    public async Task<Reservation?> GetReservationByIdAsync(Guid id)
+    {
+        return await _repository.GetByIdAsync(id);
+    }
 }

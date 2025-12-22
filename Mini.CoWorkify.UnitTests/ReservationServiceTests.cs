@@ -26,7 +26,20 @@ public class ReservationServiceShould
         var resultId = await _service.CreateReservationAsync(dto);
         
         resultId.ShouldNotBe(Guid.Empty);
-        
         _mockRepo.Verify(r => r.AddAsync(It.IsAny<Reservation>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetById_Should_Return_Reservation_When_It_Exists()
+    {
+        var id  = Guid.NewGuid();
+        var reservation = new Reservation(id, DateTime.UtcNow.AddDays(1));
+        
+        _mockRepo.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(reservation);
+
+        var result = await _service.GetReservationByIdAsync(id);
+        
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(reservation.Id);
     }
 }

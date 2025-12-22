@@ -13,8 +13,9 @@ public class InMemoryReservationRepository : IReservationRepository
         return Task.CompletedTask;
     }
 
-    public Task<Reservation> GetByIdAsync(Guid reservationId)
+    public Task<Reservation?> GetByIdAsync(Guid reservationId)
     {
-        throw new NotImplementedException();
+        var result = _database.FirstOrDefault(x => x.Id == reservationId);
+        return Task.FromResult(result);
     }
 }

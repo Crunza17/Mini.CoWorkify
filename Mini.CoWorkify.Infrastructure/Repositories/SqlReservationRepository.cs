@@ -13,8 +13,8 @@ public class SqlReservationRepository(CoWorkifyDbContext context) : IReservation
         await context.SaveChangesAsync();
     }
 
-    public Task<Reservation> GetByIdAsync(Guid reservationId)
+    public async Task<Reservation?> GetByIdAsync(Guid reservationId)
     {
-        throw new NotImplementedException();
+        return await context.Reservations.FindAsync(reservationId);
     }
 }

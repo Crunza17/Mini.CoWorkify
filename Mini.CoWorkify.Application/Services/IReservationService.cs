@@ -6,4 +6,5 @@ namespace Mini.CoWorkify.Application.Services;
 public interface IReservationService
 {
     Task<Guid> CreateReservationAsync(CreateReservationDto createReservationDto);
+    Task<Reservation?> GetReservationByIdAsync(Guid id);
 }

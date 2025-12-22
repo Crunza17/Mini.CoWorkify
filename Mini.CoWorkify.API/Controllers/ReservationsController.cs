@@ -29,4 +29,22 @@ public class ReservationsController : ControllerBase
             return BadRequest(new { Error = ex.Message });
         }
     }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        try 
+        {
+            var reservation = await _service.GetReservationByIdAsync(id);
+            
+            if (reservation is null)
+                return NotFound();
+            
+            return Ok(reservation);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
+    }
 }
