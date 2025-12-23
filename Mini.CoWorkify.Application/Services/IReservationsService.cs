@@ -3,8 +3,8 @@ using Mini.CoWorkify.Domain.Entities;
 
 namespace Mini.CoWorkify.Application.Services;
 
-public interface IReservationService
+public interface IReservationsService
 {
-    Task<Guid> CreateReservationAsync(CreateReservationDto createReservationDto);
+    Task<Guid> CreateReservationAsync(CreateReservationDto createReservationDto, Guid userId);
     Task<Reservation?> GetReservationByIdAsync(Guid id);
 }

@@ -7,23 +7,23 @@ using Shouldly;
 
 namespace Mini.CoWorkify.UnitTests.Reservations;
 
-public class ReservationServiceShould
+public class ReservationsServiceShould
 {
     private readonly Mock<IReservationRepository> _mockRepo;
-    private readonly IReservationService _service;
+    private readonly IReservationsService _service;
 
-    public ReservationServiceShould()
+    public ReservationsServiceShould()
     {
         _mockRepo = new Mock<IReservationRepository>();
-        _service = new ReservationService(_mockRepo.Object);
+        _service = new ReservationsService(_mockRepo.Object);
     }
 
     [Fact]
     public async Task ReturnId_When_DtoIsValid()
     {
-        var dto = new CreateReservationDto(Guid.NewGuid(), DateTime.UtcNow.AddDays(1));
-
-        var resultId = await _service.CreateReservationAsync(dto);
+        var dto = new CreateReservationDto(DateTime.UtcNow.AddDays(1));
+        var userId = Guid.NewGuid();
+        var resultId = await _service.CreateReservationAsync(dto, userId);
         
         resultId.ShouldNotBe(Guid.Empty);
         _mockRepo.Verify(r => r.AddAsync(It.IsAny<Reservation>()), Times.Once);
@@ -46,12 +46,13 @@ public class ReservationServiceShould
     [Fact]
     public async Task ThrowException_When_DateIsOccupied()
     {
-        var dto = new CreateReservationDto(Guid.NewGuid(), DateTime.UtcNow.AddDays(1));
+        var dto = new CreateReservationDto(DateTime.UtcNow.AddDays(1));
+        var userId = Guid.NewGuid();
         
         _mockRepo.Setup(r => r.IsDateOccupiedAsync(dto.Date)).ReturnsAsync(true);
 
         await Should.ThrowAsync<InvalidOperationException>(async () => 
-            await _service.CreateReservationAsync(dto)
+            await _service.CreateReservationAsync(dto, userId)
         );
     
         _mockRepo.Verify(r => r.AddAsync(It.IsAny<Reservation>()), Times.Never);

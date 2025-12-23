@@ -21,12 +21,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Mini.CoWorkify.API\Mini.CoWorkify.API.csproj" />
       <ProjectReference Include="..\Mini.CoWorkify.Application\Mini.CoWorkify.Application.csproj" />
       <ProjectReference Include="..\Mini.CoWorkify.Domain\Mini.CoWorkify.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Reservations\" />
+      <Reference Include="Microsoft.AspNetCore.Mvc.Core">
+        <HintPath>..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\9.0.4\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

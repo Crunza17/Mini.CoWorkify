@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Mini.CoWorkify.Application.DTOs;
 using Mini.CoWorkify.Infrastructure.Data;
 
 namespace Mini.CoWorkify.IntegrationTests.Utilities;
@@ -35,9 +38,34 @@ public abstract class BaseIntegrationTest : IClassFixture<CustomWebApplicationFa
         await action(context);
     }
     
-    // How to use (Remove this once used): 
-    // await ExecuteDbContextAsync(async db => {
-    //     var count = await db.Reservations.CountAsync();
-    //     count.ShouldBe(1);
-    // });
+    protected async Task AuthenticateAsync()
+    {
+        const string email = "testuser@coworkify.com";
+        const string password = "Password123!";
+
+        await _client.PostAsJsonAsync("/api/auth/register", new RegisterUserDto 
+        { 
+            Email = email, 
+            Password = password 
+        });
+
+        var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", new LoginUserDto 
+        { 
+            Email = email, 
+            Password = password 
+        });
+
+        loginResponse.EnsureSuccessStatusCode();
+
+        var loginContent = await loginResponse.Content.ReadFromJsonAsync<LoginResponse>();
+        var token = loginContent?.Token;
+
+        _client.DefaultRequestHeaders.Authorization = 
+            new AuthenticationHeaderValue("Bearer", token);
+    }
+
+    protected class LoginResponse
+    {
+        public string Token { get; init; } = string.Empty;
+    }
 }

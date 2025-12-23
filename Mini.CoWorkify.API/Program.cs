@@ -53,7 +53,7 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<IReservationsService, ReservationsService>();
 builder.Services.AddScoped<IReservationRepository, SqlReservationRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 

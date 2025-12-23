@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using System.Security.Claims;
+using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mini.CoWorkify.Application.DTOs;
 using Mini.CoWorkify.Application.Services;
@@ -7,7 +9,8 @@ namespace Mini.CoWorkify.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ReservationsController(IReservationService service, IValidator<CreateReservationDto> validator)
+[Authorize]
+public class ReservationsController(IReservationsService service, IValidator<CreateReservationDto> validator)
     : ControllerBase
 {
 
@@ -19,9 +22,14 @@ public class ReservationsController(IReservationService service, IValidator<Crea
         if (!validationResult.IsValid)
             return BadRequest(validationResult.ToDictionary());
         
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userId))
+            return Unauthorized(); 
+        
         try 
         {
-            var id = await service.CreateReservationAsync(dto);
+            var id = await service.CreateReservationAsync(dto, userId);
             return Ok(new { Id = id });
         }
         catch (ArgumentException ex)
