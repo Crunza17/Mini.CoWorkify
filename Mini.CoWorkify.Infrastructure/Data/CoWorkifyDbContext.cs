@@ -1,14 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Mini.CoWorkify.Domain.Entities;
 
 namespace Mini.CoWorkify.Infrastructure.Data;
 
-public class CoWorkifyDbContext(DbContextOptions<CoWorkifyDbContext> options) : DbContext(options)
+public class CoWorkifyDbContext(DbContextOptions<CoWorkifyDbContext> options) : IdentityDbContext(options)
 {
     public DbSet<Reservation> Reservations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
         modelBuilder.Entity<Reservation>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -18,7 +21,5 @@ public class CoWorkifyDbContext(DbContextOptions<CoWorkifyDbContext> options) : 
             
             entity.HasIndex(e => e.Date);
         });
-        
-        base.OnModelCreating(modelBuilder);
     }
 }
