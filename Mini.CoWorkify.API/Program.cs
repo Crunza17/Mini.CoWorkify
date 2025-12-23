@@ -1,9 +1,11 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Mini.CoWorkify.Application.Services;
 using Mini.CoWorkify.Domain.Interfaces;
 using Mini.CoWorkify.Infrastructure.Data;
 using Mini.CoWorkify.Infrastructure.Repositories;
+using Mini.CoWorkify.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +21,18 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<CoWorkifyDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => 
+    {
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequiredLength = 6;
+    })
+    .AddEntityFrameworkStores<CoWorkifyDbContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IReservationRepository, SqlReservationRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
