@@ -1,0 +1,30 @@
+﻿services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: coworkify_db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Password123!
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: coworkify_api
+    depends_on:
+      - db
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=CoWorkifyDb;User Id=sa;Password=Password123!;TrustServerCertificate=True;
+      - Jwt__Key=EstaEsUnaClaveSuperSecretaYDebeSerMuyLargaParaSeguridad2025!
+      - Jwt__Issuer=Mini.CoWorkify.API
+      - Jwt__Audience=Mini.CoWorkify.Client
+
+volumes:
+  mssql_data:
